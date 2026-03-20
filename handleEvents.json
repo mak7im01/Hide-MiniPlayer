@@ -1,0 +1,17 @@
+{
+    "sections": [
+        {
+            "title": "Настройки миниплеера",
+            "items": [
+                {
+                    "id": "hideMiniPlayer",
+                    "name": "Скрыть кнопку миниплеера",
+                    "description": "Полностью скрывает кнопку миниплеера из TitleBar",
+                    "type": "button",
+                    "bool": true,
+                    "defaultParameter": true
+                }
+            ]
+        }
+    ]
+}

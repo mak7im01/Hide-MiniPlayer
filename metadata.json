@@ -1,0 +1,14 @@
+{
+    "name": "Hide MiniPlayer",
+    "libraryLogo": "",
+    "author": "dobryjigrok",
+    "description": "Скрывает кнопку миниплеера из TitleBar с возможностью настройки",
+    "version": "1.0.0",
+    "css": "style.css",
+    "script": "script.js",
+    "type": "script",
+    "tags": ["script", "ui", "miniplayer", "utility"],
+    "dependencies": [],
+    "allowedUrls": [],
+    "supportedVersions": []
+}
