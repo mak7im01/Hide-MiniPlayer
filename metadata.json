@@ -1,11 +1,11 @@
 {
     "name": "Hide MiniPlayer",
-    "libraryLogo": "logo.svg",
-    "image": "logo.svg",
-    "banner": "banner.svg",
+    "libraryLogo": "logo.png",
+    "image": "logo.png",
+    "banner": "banner.png",
     "author": "dobryjigrok",
-    "description": "Скрывает кнопку миниплеера из TitleBar с возможностью настройки",
-    "version": "1.1.0",
+    "description": "Скрывает кнопку миниплеера из TitleBar",
+    "version": "1.1.1",
     "css": "style.css",
     "script": "script.js",
     "type": "script",
@@ -19,5 +19,6 @@
     "allowedUrls": [],
     "supportedVersions": [],
     "installSource": "local",
-    "id": "7f36e8c582ad44a165e74f13"
+    "id": "7f36e8c582ad44a165e74f13",
+    "storeAddonId": "9eda08d6-ec65-44bc-80a2-e7ef134652fe"
 }
