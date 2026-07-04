@@ -1,54 +1,17 @@
 (function () {
-    // Получение настроек
-    async function getSettings(name) {
-        try {
-            const response = await fetch(`http://localhost:2007/get_handle?name=${name}`);
-            if (!response.ok) throw new Error(`Ошибка сети: ${response.status}`);
-      
-            const { data } = await response.json();
-            if (!data?.sections) {
-                console.warn("Структура данных не соответствует ожидаемой");
-                return null;
-            }
+    const ADDON_NAME = 'Hide MiniPlayer';
 
-            return transformJSON(data);
-        } catch (error) {
-            console.error(error);
-            return null;
+    // Хелпер для извлечения значения из объекта настроек
+    function unwrapSetting(entry, fallback) {
+        if (entry && typeof entry === 'object' && !Array.isArray(entry)) {
+            if (typeof entry.value !== 'undefined') return entry.value;
+            if (typeof entry.default !== 'undefined') return entry.default;
         }
+        return typeof entry !== 'undefined' ? entry : fallback;
     }
 
-    // "Трансформирование" полученных настроек для более удобного использования
-    function transformJSON(data) {
-        const result = {};
-
-        try {
-            data.sections.forEach(section => {
-                section.items.forEach(item => {
-                    if (item.type === "text" && item.buttons) {
-                        result[item.id] = {};
-                        item.buttons.forEach(button => {
-                            result[item.id][button.id] = {
-                                value: button.text,
-                                default: button.defaultParameter
-                            };
-                        });
-                    } else {
-                        result[item.id] = {
-                            value: item.bool || item.input || item.selected || item.value || item.filePath,
-                            default: item.defaultParameter
-                        };
-                    }
-                });
-            });
-        } finally {
-            return result;
-        }
-    }
-
-    // Применение настроек
+    // Применение настроек — создаём/обновляем <style> тег
     function applySettings(settings) {
-        // Создание "контейнера" для нашего CSS кода
         let styleElement = document.getElementById('hide-miniplayer-style');
         if (!styleElement) {
             styleElement = document.createElement('style');
@@ -56,28 +19,28 @@
             document.head.appendChild(styleElement);
         }
 
-        // Очищаем его для перезаписи в зависимости от настроек
-        styleElement.textContent = '';
+        const shouldHide = settings
+            ? Boolean(unwrapSetting(settings['hideMiniPlayer'], true))
+            : true;
 
-        // Если настройки не загружены, используем значение по умолчанию (скрыть)
-        const shouldHide = settings ? settings.hideMiniPlayer?.value : true;
-
-        // Применяем настройку, если она включена
-        if (shouldHide === true) {
-            styleElement.textContent += `
-                button[aria-label="miniplayer"] {
-                    display: none !important;
-                }
-            `;
-        }
+        styleElement.textContent = shouldHide
+            ? `button[aria-label="miniplayer"] { display: none !important; }`
+            : '';
     }
 
     // Применяем настройки по умолчанию сразу при загрузке
     applySettings(null);
 
-    // Обновляем настройки каждые 2 секунды
-    setInterval(async () => {
-        const settings = await getSettings("Hide MiniPlayer");
-        applySettings(settings);
-    }, 2000);
+    // Подключаемся к новому API настроек
+    const settingsStore = window.pulsesyncApi?.getSettings(ADDON_NAME) ?? {
+        getCurrent: () => ({}),
+        onChange: () => () => {},
+    };
+
+    // Читаем текущие настройки и подписываемся на изменения
+    applySettings(settingsStore.getCurrent());
+
+    settingsStore.onChange(function (nextSettings) {
+        applySettings(nextSettings);
+    });
 })();

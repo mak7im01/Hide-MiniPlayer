@@ -5,7 +5,7 @@
     "banner": "banner.png",
     "author": "dobryjigrok",
     "description": "Скрывает кнопку миниплеера из TitleBar",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "css": "style.css",
     "script": "script.js",
     "type": "script",
